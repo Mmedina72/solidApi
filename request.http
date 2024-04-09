@@ -1,0 +1,28 @@
+@URL= http://localhost:3333
+
+
+# @name CREATE_USER
+
+POST {{URL}}/users
+Content-Type: application/json
+body:
+
+{
+    "name": "John Doe",
+    "email": "JohnDoe@gmail.com",
+    "password": "123456"
+}
+
+
+
+###
+#  @name AUTHENTICATE_USER
+
+POST {{URL}}/sessions 
+Content-Type: application/json
+body:
+
+{
+    "email": "JohnDoe@gmail.com",
+    "password": "123456"
+}

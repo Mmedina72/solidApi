@@ -12,7 +12,7 @@
     "test:watch": "vitest --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "Miguel Medina",
   "license": "ISC",
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",

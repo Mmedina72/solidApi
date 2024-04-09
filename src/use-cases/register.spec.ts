@@ -1,17 +1,23 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, beforeEach } from 'vitest'
 import { RegisterUseCase } from './register'
-import { compare } from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { inMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { userAlreadyExistError } from './errors/user-already-exist'
 
 //unit testing they are isolated from the rest of the application disconnected from the database and other external services
+//initializing the variables
+let usersRepository: inMemoryUsersRepository
+let registerUseCase: RegisterUseCase
 
+//unit testing they are isolated from the rest of the application disconnected from the database and other external services
 describe('Register UseCase ', () => {
+  beforeEach(() => {
+    //creating a new instance of the inMemoryUsersRepository to be used in all tests
+    usersRepository = new inMemoryUsersRepository()
+    registerUseCase = new RegisterUseCase(usersRepository)
+  })
+
   it('SHOULD BE ABLE TO REGISTER ', async () => {
-    const usersRepository = new inMemoryUsersRepository()
-
-    const registerUseCase = new RegisterUseCase(usersRepository)
-
     const { user } = await registerUseCase.execute({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
@@ -22,26 +28,18 @@ describe('Register UseCase ', () => {
   })
 
   it('SHOULD HASH THE PASSWORD', async () => {
-    const usersRepository = new inMemoryUsersRepository()
-
-    const registerUseCase = new RegisterUseCase(usersRepository)
-
     const { user } = await registerUseCase.execute({
       name: 'John Doe',
       email: 'johndoe@gmail.com',
       password: '123456',
     })
 
-    const isPasswordHashed = await compare('123456', user.password)
+    const isPasswordHashed = await bcrypt.compare('123456', user.password)
 
     expect(isPasswordHashed).toBe(true)
   })
 
   it('SHOULD NOT HAVE EMAIL REPEATED', async () => {
-    const usersRepository = new inMemoryUsersRepository()
-
-    const registerUseCase = new RegisterUseCase(usersRepository)
-
     const email = 'johndoe@gmail.com'
 
     await registerUseCase.execute({
@@ -55,7 +53,7 @@ describe('Register UseCase ', () => {
         name: 'John Doe',
         email: email,
         password: '123456',
-      }),
+      })
     ).rejects.toBeInstanceOf(userAlreadyExistError)
   })
 })
