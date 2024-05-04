@@ -30,7 +30,7 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not authenticate user with invalid password', async () => {
-    expect(() =>
+    await expect(() =>
       authenticateUseCase.execute({
         email: 'johndoe@gmail.com',
         password: '123456',
@@ -45,7 +45,7 @@ describe('Authenticate Use Case', () => {
       password: await hash('123456', 8),
     })
 
-    expect(() =>
+    await expect(() =>
       authenticateUseCase.execute({
         email: 'johndoe@gmail.com',
         password: '1234567',

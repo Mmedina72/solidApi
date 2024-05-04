@@ -1,3 +1,4 @@
+import { request } from 'https'
 import { authenticateController } from './controllers/authenticate'
 import { registerController } from './controllers/register'
 import { FastifyInstance } from 'fastify'
